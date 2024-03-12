@@ -128,7 +128,57 @@ Explorer
 
     https://warden-explorer.paranorm.pro/warden/staking
 
-# DONE 
+
+Delegate Token to your own validator
+
+        wardend tx staking delegate $(wardend keys show wallet --bech val -a)  1000000uward \
+        --from=wallet \
+        --chain-id=alfama \
+        --fees=500uward
+
+Withdraw rewards and commission from your validator
+
+        wardend tx distribution withdraw-rewards $(wardend keys show wallet --bech val -a) \
+        --from wallet \
+        --commission \
+        --chain-id=alfama \
+        --fees=500uward
+
+Unjail validator
+
+        wardend tx slashing unjail \
+        --from wallet \
+        --commission \
+        --chain-id=alfama \
+        --fees=500uward
+
+Services Management
+
+        # Reload Service
+        sudo systemctl daemon-reload
+        # Enable Service
+        sudo systemctl enable wardend
+        # Disable Service
+        sudo systemctl disable wardend
+        # Start Service
+        sudo systemctl start wardend
+        # Stop Service
+        sudo systemctl stop wardend
+        # Restart Service
+        sudo systemctl restart wardend
+        # Check Service Status
+        sudo systemctl status wardend
+        # Check Service Logs
+        sudo journalctl -u wardend -f --no-hostname -o cat
+
+ Backup Validator
+
+         cat $HOME/.warden/config/priv_validator_key.json
+
+Remove node
+
+        sudo systemctl stop wardend && sudo systemctl disable wardend && sudo rm /etc/systemd/system/wardend.service && sudo systemctl daemon-reload && rm -rf $HOME/.warden && $HOME/wardenprotocol
+  # DONE 
     
 
         
