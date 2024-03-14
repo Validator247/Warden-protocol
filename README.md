@@ -62,10 +62,30 @@ Now you can add the state sync configuration to your config.toml:
     s|^(trust_height[[:space:]]+=[[:space:]]+).*$|\1$BLOCK_HEIGHT| ; \
     s|^(trust_hash[[:space:]]+=[[:space:]]+).*$|\1\"$TRUST_HASH\"|" $HOME/.warden/config/config.toml
 
-Start the node
-You can now start the node using the following command:
+Create service
 
-    wardend start
+        sudo tee /etc/systemd/system/wardend.service > /dev/null <<EOF
+        [Unit]
+        Description=Warden Protocol
+        After=network-online.target
+        [Service]
+        User=root
+        ExecStart=$(which wardend) start
+        Restart=always
+        RestartSec=3
+        LimitNOFILE=65535
+        [Install]
+        WantedBy=multi-user.target
+        EOF
+        
+        cd $HOME
+        sudo systemctl daemon-reload
+        sudo systemctl enable wardend
+
+
+Launch Node
+
+    sudo systemctl restart wardend && sudo journalctl -u wardend -f --no-hostname -o cat
 
 # Create a validator
 If you want to create a validator in the testnet, follow the instructions in the Creating a validator section.
