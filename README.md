@@ -82,7 +82,7 @@ faucet token
 
 Check Banlance
 
-    wardend query bank balances wallet
+    wardend query bank balance wallet
 
 # Create a new validator
 Once the node is synced and you have the required WARD, you can become a validator.
