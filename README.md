@@ -105,7 +105,7 @@ The validator.json file has the following format: Change your personal informati
 
     {    
     "pubkey": {"@type":"/cosmos.crypto.ed25519.PubKey","key":"lR1d7YBVK5jYijOfWVKRFoWCsS4dg3kagT7LB9GnG8I="},
-    "amount": "1000000uward,
+    "amount": "1000000uward",
     "moniker": "your-node-moniker",
     "identity": "eqlab testnet validator",
     "website": "optional website for your validator",
