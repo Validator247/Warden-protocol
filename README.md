@@ -167,10 +167,10 @@ Withdraw rewards and commission from your validator
 Unjail validator
 
         wardend tx slashing unjail \
-        --from wallet \
-        --commission \
+        --from=wallet \
         --chain-id=alfama \
         --fees=500uward
+
 
 Services Management
 
