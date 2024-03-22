@@ -1,5 +1,12 @@
 # Warden-protocol
 
+
+https://warden-api.validator247.com/
+
+https://warden-rpc.validator247.com/
+
+https://explorer.validator247.com/Warden-Testnet
+
 Update system
 
     sudo apt update
