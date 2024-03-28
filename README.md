@@ -1,11 +1,11 @@
 # Warden-protocol
 
 
-https://warden-api.validator247.com/
+API:  https://warden-api.validator247.com/
 
-https://warden-rpc.validator247.com/
+RPC:  https://warden-rpc.validator247.com/
 
-https://explorer.validator247.com/Warden-Testnet
+Explorer: https://explorer.validator247.com/Warden-Testnet
 
 Update system
 
