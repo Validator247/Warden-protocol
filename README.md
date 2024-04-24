@@ -44,11 +44,11 @@ Initialize Node
 
 Download Genesis
 
-        curl -Ls https://ss-t.warden.nodestake.org/genesis.json > $HOME/.warden/config/genesis.json 
+        wget -O genesis.json https://raw.githubusercontent.com/Validator247/Warden-protocol/main/genesis.json
 
 Download addrbook
 
-        curl -Ls https://ss-t.warden.nodestake.org/addrbook.json > $HOME/.warden/config/addrbook.json
+        wget -O addrbook.json https://raw.githubusercontent.com/Validator247/Warden-protocol/main/addrbook.json
 
 Create Service
 
