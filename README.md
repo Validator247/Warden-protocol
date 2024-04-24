@@ -17,7 +17,7 @@ Install Go
     rm -rf $HOME/go
     sudo rm -rf /usr/local/go
     cd $HOME
-    curl https://dl.google.com/go/go1.20.5.linux-amd64.tar.gz | sudo tar -C/usr/local -zxvf -
+    curl https://dl.google.com/go/go1.22.1.linux-amd64.tar.gz | sudo tar -C/usr/local -zxvf -
     cat <<'EOF' >>$HOME/.profile
     export GOROOT=/usr/local/go
     export GOPATH=$HOME/go
@@ -27,56 +27,37 @@ Install Go
     source $HOME/.profile
     go version
 
-Installation & Configuration
+Install node
 
-Build the wardend binary and initalize the chain home folder:
+        cd $HOME
+        rm -rf wardenprotocol
+        git clone https://github.com/warden-protocol/wardenprotocol.git
+        cd wardenprotocol
+        git checkout v0.3.0
+        make install-wardend
+        wardend version
 
-    git clone --depth 1 --branch v0.1.0 https://github.com/warden-protocol/wardenprotocol/
-    cd  wardenprotocol/warden/cmd/wardend
-    go build
-    sudo mv wardend /usr/local/bin/
-    wardend init <custom_moniker>
 
-Prepare the genesis file:
+Initialize Node
 
-    cd $HOME/.warden/config
-    rm genesis.json
-    wget https://raw.githubusercontent.com/warden-protocol/networks/main/testnet-alfama/genesis.json
+        wardend init NodeName --chain-id=buenavista-1
 
-    # Set minimum gas price & peers
-    sed -i 's/minimum-gas-prices = ""/minimum-gas-prices = "0.0025uward"/' app.toml
-    sed -i 's/minimum-gas-prices = ""/minimum-gas-prices = "0.0025uward"/' app.toml
-    sed -i 's/persistent_peers = ""/persistent_peers = "6a8de92a3bb422c10f764fe8b0ab32e1e334d0bd@sentry-1.alfama.wardenprotocol.org:26656,7560460b016ee0867cae5642adace5d011c6c0ae@sentry-2.alfama.wardenprotocol.org:26656,24ad598e2f3fc82630554d98418d26cc3edf28b9@sentry-3.alfama.wardenprotocol.org:26656"/' config.toml
+Download Genesis
 
-(Recommended) Setup state sync
+        curl -Ls https://ss-t.warden.nodestake.org/genesis.json > $HOME/.warden/config/genesis.json 
 
-    export SNAP_RPC_SERVERS="https://rpc.sentry-1.alfama.wardenprotocol.org:443,https://rpc.sentry-2.alfama.wardenprotocol.org:443,https://rpc.sentry-3.alfama.wardenprotocol.org:443"
-    export LATEST_HEIGHT=$(curl -s "https://rpc.alfama.wardenprotocol.org/block" | jq -r .result.block.header.height)
-    export BLOCK_HEIGHT=$((LATEST_HEIGHT - 2000))
-    export TRUST_HASH=$(curl -s "https://rpc.alfama.wardenprotocol.org/block?height=$BLOCK_HEIGHT" | jq -r .result.block_id.hash)
+Download addrbook
 
-Check that all variables have been set correctly:
+        curl -Ls https://ss-t.warden.nodestake.org/addrbook.json > $HOME/.warden/config/addrbook.json
 
-    echo $LATEST_HEIGHT $BLOCK_HEIGHT $TRUST_HASH
-
-    # output should be similar to:
-    # 70694 68694 6AF4938885598EA10C0BD493D267EF363B067101B6F81D1210B27EBE0B32FA2A
-
-Now you can add the state sync configuration to your config.toml:
-
-    sed -i.bak -E "s|^(enable[[:space:]]+=[[:space:]]+).*$|\1true| ; \
-    s|^(rpc_servers[[:space:]]+=[[:space:]]+).*$|\1\"$SNAP_RPC_SERVERS\"| ; \
-    s|^(trust_height[[:space:]]+=[[:space:]]+).*$|\1$BLOCK_HEIGHT| ; \
-    s|^(trust_hash[[:space:]]+=[[:space:]]+).*$|\1\"$TRUST_HASH\"|" $HOME/.warden/config/config.toml
-
-Create service
+Create Service
 
         sudo tee /etc/systemd/system/wardend.service > /dev/null <<EOF
         [Unit]
-        Description=Warden Protocol
+        Description=wardend Daemon
         After=network-online.target
         [Service]
-        User=root
+        User=$USER
         ExecStart=$(which wardend) start
         Restart=always
         RestartSec=3
@@ -84,15 +65,19 @@ Create service
         [Install]
         WantedBy=multi-user.target
         EOF
-        
-        cd $HOME
         sudo systemctl daemon-reload
         sudo systemctl enable wardend
+
+Download Snapshot
+
+        SNAP_NAME=$(curl -s https://ss-t.warden.nodestake.org/ | egrep -o ">20.*\.tar.lz4" | tr -d ">")
+        curl -o - -L https://ss-t.warden.nodestake.top/${SNAP_NAME}  | lz4 -c -d - | tar -x -C $HOME/.warden
 
 
 Launch Node
 
-    sudo systemctl restart wardend && sudo journalctl -u wardend -f --no-hostname -o cat
+    sudo systemctl restart wardend
+    journalctl -u wardend -f -o cat
 
 # Create a validator
 If you want to create a validator in the testnet, follow the instructions in the Creating a validator section.
@@ -105,7 +90,7 @@ Create Wallet
 
 faucet token 
 
-    curl --json '{"address": "<your-address>"}' https://faucet.alfama.wardenprotocol.org
+    curl -XPOST -d '{"address": "your_wallet"}' https://faucet.buenavista.wardenprotocol.org
 
 Check Banlance
 
@@ -134,10 +119,10 @@ The validator.json file has the following format: Change your personal informati
     "pubkey": {"@type":"/cosmos.crypto.ed25519.PubKey","key":"lR1d7YBVK5jYijOfWVKRFoWCsS4dg3kagT7LB9GnG8I="},
     "amount": "1000000uward",
     "moniker": "your-node-moniker",
-    "identity": "eqlab testnet validator",
-    "website": "optional website for your validator",
-    "security": "optional security contact for your validator",
-    "details": "optional details for your validator",
+    "identity": "your_Keybase",
+    "website": "your_website",
+    "security": "your_email",
+    "details": "I love validator247",
     "commission-rate": "0.1",
     "commission-max-rate": "0.2",
     "commission-max-change-rate": "0.01",
@@ -148,7 +133,7 @@ Finally, we're ready to submit the transaction to create the validator:
 
     wardend tx staking create-validator validator.json \
     --from=<key-name> \
-    --chain-id=alfama \
+    --chain-id=buenavista-1 \
     --fees=500uward
 
 Explorer
@@ -160,7 +145,7 @@ Delegate Token to your own validator
 
         wardend tx staking delegate $(wardend keys show wallet --bech val -a)  1000000uward \
         --from=wallet \
-        --chain-id=alfama \
+        --chain-id=buenavista-1 \
         --fees=500uward
 
 Withdraw rewards and commission from your validator
@@ -168,14 +153,14 @@ Withdraw rewards and commission from your validator
         wardend tx distribution withdraw-rewards $(wardend keys show wallet --bech val -a) \
         --from wallet \
         --commission \
-        --chain-id=alfama \
+        --chain-id=buenavista-1 \
         --fees=500uward
 
 Unjail validator
 
         wardend tx slashing unjail \
         --from=wallet \
-        --chain-id=alfama \
+        --chain-id=buenavista-1 \
         --fees=500uward
 
 
