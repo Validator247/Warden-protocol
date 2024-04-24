@@ -50,7 +50,7 @@ Download addrbook
 
         wget -O addrbook.json https://raw.githubusercontent.com/Validator247/Warden-protocol/main/addrbook.json
 
-# set minimum gas price, enable prometheus and disable indexing
+set minimum gas price, enable prometheus and disable indexing
 
         sed -i 's|minimum-gas-prices =.*|minimum-gas-prices = "0.0025uward"|g' $HOME/.warden/config/app.toml
         sed -i -e "s/prometheus = false/prometheus = true/" $HOME/.warden/config/config.toml
