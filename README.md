@@ -138,7 +138,7 @@ Finally, we're ready to submit the transaction to create the validator:
 
 Explorer
 
-    https://warden-explorer.paranorm.pro/warden/staking
+    https://explorer.validator247.com/Warden-Testnet
 
 
 Delegate Token to your own validator
