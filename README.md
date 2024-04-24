@@ -56,6 +56,30 @@ Download addrbook
     PEERS="b14f35c07c1b2e58c4a1c1727c89a5933739eeea@warden-testnet- peer.itrocket.net:18656,61446070887838944c455cb713a7770b41f35ac5@37.60.249.101:26656,dc0122e37c203dec43306430a1f1879650653479@37.27.97.16:26656,846bef6b31b20b075ff5b574d9733163b9b1958c@62.169.21.90:26656,8fa927f5255b24b28757008ae279ff6ef9a6eeed@65.21.69.53:18656,6fb5cf2179ca9dd98ababd1c8d29878b2021c5c3@146.19.24.175:26856,aa59909de26202791f252365b6d62fdd766e11df@163.172.64.81:26656,de523309ae6b47db097355f18f98ec7b65b8d373@78.47.92.231:26656,bda08962882048fea4331fcf96ad02789671700e@65.21.202.124:35656,8fa48bbd20d316382f339bd00f31d3a2678682d2@144.76.29.90:26656"
     sed -i -e "s/^seeds *=.*/seeds = \"$SEEDS\"/; s/^persistent_peers *=.*/persistent_peers = \"$PEERS\"/" $HOME/.warden/config/config.toml
 
+ set custom ports in app.toml
+
+    sed -i.bak -e "s%:1317%:${WARDEN_PORT}317%g;
+    s%:8080%:${WARDEN_PORT}080%g;
+    s%:9090%:${WARDEN_PORT}090%g;
+    s%:9091%:${WARDEN_PORT}091%g;
+    s%:8545%:${WARDEN_PORT}545%g;
+    s%:8546%:${WARDEN_PORT}546%g;
+    s%:6065%:${WARDEN_PORT}065%g" $HOME/.warden/config/app.toml
+
+set custom ports in config.toml file
+
+    sed -i.bak -e "s%:26658%:${WARDEN_PORT}658%g;
+    s%:26657%:${WARDEN_PORT}657%g;
+    s%:6060%:${WARDEN_PORT}060%g;
+    s%:26656%:${WARDEN_PORT}656%g;
+    s%^external_address = \"\"%external_address = \"$(wget -qO- eth0.me):${WARDEN_PORT}656\"%;
+    s%:26660%:${WARDEN_PORT}660%g" $HOME/.warden/config/config.toml
+
+config pruning
+
+    sed -i -e "s/^pruning *=.*/pruning = \"custom\"/" $HOME/.warden/config/app.toml
+    sed -i -e "s/^pruning-keep-recent *=.*/pruning-keep-recent = \"100\"/" $HOME/.warden/config/app.toml
+    sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"50\"/" $HOME/.warden/config/app.toml   
 
 
 set minimum gas price, enable prometheus and disable indexing
