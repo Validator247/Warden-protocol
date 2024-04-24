@@ -50,6 +50,14 @@ Download addrbook
 
         wget -O addrbook.json https://raw.githubusercontent.com/Validator247/Warden-protocol/main/addrbook.json
 
+ set seeds and peers
+
+    SEEDS="8288657cb2ba075f600911685670517d18f54f3b@warden-testnet-seed.itrocket.net:18656"
+    PEERS="b14f35c07c1b2e58c4a1c1727c89a5933739eeea@warden-testnet- peer.itrocket.net:18656,61446070887838944c455cb713a7770b41f35ac5@37.60.249.101:26656,dc0122e37c203dec43306430a1f1879650653479@37.27.97.16:26656,846bef6b31b20b075ff5b574d9733163b9b1958c@62.169.21.90:26656,8fa927f5255b24b28757008ae279ff6ef9a6eeed@65.21.69.53:18656,6fb5cf2179ca9dd98ababd1c8d29878b2021c5c3@146.19.24.175:26856,aa59909de26202791f252365b6d62fdd766e11df@163.172.64.81:26656,de523309ae6b47db097355f18f98ec7b65b8d373@78.47.92.231:26656,bda08962882048fea4331fcf96ad02789671700e@65.21.202.124:35656,8fa48bbd20d316382f339bd00f31d3a2678682d2@144.76.29.90:26656"
+    sed -i -e "s/^seeds *=.*/seeds = \"$SEEDS\"/; s/^persistent_peers *=.*/persistent_peers = \"$PEERS\"/" $HOME/.warden/config/config.toml
+
+
+
 set minimum gas price, enable prometheus and disable indexing
 
         sed -i 's|minimum-gas-prices =.*|minimum-gas-prices = "0.0025uward"|g' $HOME/.warden/config/app.toml
