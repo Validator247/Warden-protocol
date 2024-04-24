@@ -56,15 +56,18 @@ Create Service
         [Unit]
         Description=wardend Daemon
         After=network-online.target
+
         [Service]
         User=$USER
         ExecStart=$(which wardend) start
         Restart=always
         RestartSec=3
         LimitNOFILE=65535
+
         [Install]
         WantedBy=multi-user.target
         EOF
+
         sudo systemctl daemon-reload
         sudo systemctl enable wardend
 
