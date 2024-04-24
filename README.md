@@ -98,7 +98,7 @@ Download Snapshot
 
        sudo systemctl restart wardend && sudo journalctl -u wardend -f -o cat
 
-State Sync
+Or use State Sync
 
         sudo systemctl stop wardend
 
